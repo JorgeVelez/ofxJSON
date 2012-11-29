@@ -92,22 +92,25 @@ bool ofxJSONElement::openRemote(string filename, bool secure)
 //--------------------------------------------------------------
 bool ofxJSONElement::save(string filename, bool pretty)
 {
-	filename = ofToDataPath(filename, true);
-	ofstream file_key(filename.c_str());
-	if (!file_key.is_open()) {
+    ofFile file;
+    bool opened = file.open(filename, ofFile::WriteOnly);
+    
+//	filename = ofToDataPath(filename, true);
+//	ofstream file_key(filename.c_str());
+	if (!opened) {
 		ofLog(OF_LOG_WARNING, "Unable to open "+filename);
 		return false;
 	}
 	
 	if(pretty) {
 		StyledWriter writer;
-		file_key << writer.write( *this ) << endl;
+		file << writer.write( *this ) << endl;
 	} else {
 		FastWriter writer;
-		file_key << writer.write( *this ) << endl;
+		file << writer.write( *this ) << endl;
 	}
 	ofLog(OF_LOG_NOTICE, "JSON saved to "+filename);
-	file_key.close();	
+	file.close();
 	return true;
 }
 
